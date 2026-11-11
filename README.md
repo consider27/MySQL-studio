@@ -27,6 +27,8 @@ git push -u origin main
 
 The bridge starts the client with `--batch --raw --column-names`, writes SQL to stdin, and parses tab-separated stdout into the result table. The password is supplied through `MYSQL_PWD` for that process and is not written into the SQL text. For production use, add OS keychain storage and a dedicated query allow-list before distributing the app to other users.
 
+The Windows setup program asks whether to create a desktop shortcut. On first launch it searches PATH, MySQL Server folders, MariaDB, XAMPP, and WAMP for `mysql.exe` and fills the client path automatically.
+
 ## Features in this prototype
 
 - Execute arbitrary SQL through a local `mysql.exe` process.

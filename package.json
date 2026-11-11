@@ -22,9 +22,22 @@
       "package.json"
     ],
     "win": {
-      "target": "portable",
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "signAndEditExecutable": false,
       "artifactName": "MySQL-Studio-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MySQL Studio",
+      "include": "build/installer.nsh",
+      "artifactName": "MySQL-Studio-${version}-Setup.exe",
+      "deleteAppDataOnUninstall": false
     }
   }
 }

@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const { spawn } = require('node:child_process');
+const { spawn, spawnSync } = require('node:child_process');
+const fs = require('node:fs');
 const path = require('node:path');
 
 let mainWindow;
@@ -49,6 +50,27 @@ function runMysql({ mysqlPath, host, port, user, password, database, sql, extraA
 }
 
 ipcMain.handle('mysql:run', (_event, payload) => runMysql(payload));
+ipcMain.handle('mysql:find-executable', () => {
+  const candidates = [];
+  try {
+    const result = spawnSync(process.platform === 'win32' ? 'where.exe' : 'which', ['mysql'], { encoding: 'utf8', windowsHide: true });
+    if (result.status === 0) candidates.push(...result.stdout.split(/\r?\n/).map((item) => item.trim()).filter(Boolean));
+  } catch (_) {}
+  if (process.platform === 'win32') {
+    const roots = [process.env.ProgramFiles, process.env['ProgramFiles(x86)'], process.env.ProgramW6432, 'C:\\xampp\\mysql\\bin', 'C:\\wamp64\\bin\\mysql'];
+    for (const root of roots.filter(Boolean)) {
+      try {
+        if (root.toLowerCase().endsWith('mysql\\bin')) candidates.push(path.join(root, 'mysql.exe'));
+        else for (const folder of fs.readdirSync(root, { withFileTypes: true })) {
+          if (!folder.isDirectory() || !/^MySQL|MariaDB/i.test(folder.name)) continue;
+          const direct = path.join(root, folder.name, 'bin', 'mysql.exe');
+          if (fs.existsSync(direct)) candidates.push(direct);
+        }
+      } catch (_) {}
+    }
+  }
+  return candidates.find((candidate) => fs.existsSync(candidate)) || '';
+});
 ipcMain.handle('mysql:pick-executable', async () => {
   const result = await dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'MySQL executable', extensions: ['exe'] }] });
   return result.canceled ? '' : result.filePaths[0];

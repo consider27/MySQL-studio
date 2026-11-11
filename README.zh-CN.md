@@ -24,3 +24,5 @@ npm run dist       # 生成 Windows 打包文件到 dist/
 ```
 
 密码只通过进程环境变量传给 `mysql.exe`，不会写入 SQL 文本。首次没有配置客户端路径时，应用会显示演示数据。
+
+Windows 安装程序会询问是否创建桌面快捷方式。首次启动时会自动搜索 PATH、MySQL Server、MariaDB、XAMPP 和 WAMP 目录中的 `mysql.exe`，并自动填入客户端路径。

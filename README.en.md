@@ -24,3 +24,5 @@ npm run dist       # create Windows build artifacts in dist/
 ```
 
 The password is passed to `mysql.exe` through the process environment and is not written into SQL text. Without a configured client path, the app uses demo data.
+
+The Windows setup asks whether to create a desktop shortcut. On first launch it searches PATH, MySQL Server, MariaDB, XAMPP, and WAMP folders for `mysql.exe` and fills the client path automatically.
