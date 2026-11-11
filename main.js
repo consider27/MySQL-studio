@@ -27,9 +27,16 @@ function splitMysqlArgs(value) {
 
 function runMysql({ mysqlPath, host, port, user, password, database, sql, extraArgs = [] }) {
   return new Promise((resolve) => {
-    const args = ['--batch', '--raw', '--column-names', '-h', host || '127.0.0.1', '-P', String(port || 3306), '-u', user || 'root'];
+    const args = ['--batch', '--raw', '--column-names', '--connect-timeout=5', '--protocol=tcp', '-h', host || '127.0.0.1', '-P', String(port || 3306), '-u', user || 'root'];
     if (database) args.push(database);
     args.push(...splitMysqlArgs(extraArgs));
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(result);
+    };
     const child = spawn(mysqlPath || 'mysql', args, {
       env: { ...process.env, MYSQL_PWD: password || '' },
       windowsHide: true,
@@ -37,19 +44,36 @@ function runMysql({ mysqlPath, host, port, user, password, database, sql, extraA
     });
     let stdout = '';
     let stderr = '';
-    const timer = setTimeout(() => child.kill(), 30000);
+    const timer = setTimeout(() => {
+      child.kill();
+      finish({ ok: false, code: null, stdout, stderr, error: '连接超时（5 秒）。请确认 MySQL 服务已启动，主机和端口正确。' });
+    }, 8000);
     child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
     child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
-    child.on('error', (error) => { clearTimeout(timer); resolve({ ok: false, error: error.message }); });
+    child.on('error', (error) => finish({ ok: false, error: error.message }));
     child.on('close', (code) => {
-      clearTimeout(timer);
-      resolve({ ok: code === 0, code, stdout, stderr, error: code === 0 ? '' : (stderr || `mysql.exe exited with code ${code}`) });
+      finish({ ok: code === 0, code, stdout, stderr, error: code === 0 ? '' : (stderr || `mysql.exe exited with code ${code}`) });
     });
     child.stdin.end(sql || '');
   });
 }
 
 ipcMain.handle('mysql:run', (_event, payload) => runMysql(payload));
+ipcMain.handle('mysql:start-service', async () => {
+  const serviceNames = ['MySQL80', 'MySQL', 'MariaDB', 'MySQL90'];
+  for (const serviceName of serviceNames) {
+    const result = await new Promise((resolve) => {
+      const child = spawn('sc.exe', ['start', serviceName], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+      let output = '';
+      child.stdout.on('data', (chunk) => { output += chunk.toString(); });
+      child.stderr.on('data', (chunk) => { output += chunk.toString(); });
+      child.on('error', (error) => resolve({ ok: false, output: error.message }));
+      child.on('close', (code) => resolve({ ok: code === 0, output }));
+    });
+    if (result.ok) return { ok: true, serviceName, output: result.output };
+  }
+  return { ok: false, error: '未找到可启动的 MySQL Windows 服务，或当前用户没有启动服务的权限。请先安装 MySQL Server。' };
+});
 ipcMain.handle('mysql:find-executable', () => {
   const candidates = [];
   try {

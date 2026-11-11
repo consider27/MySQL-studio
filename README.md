@@ -34,6 +34,8 @@ The Windows setup program asks whether to create a desktop shortcut. On first la
 - Query tabs, formatting, keyboard shortcut, history, favorites, Explain preview, messages, CSV export, and responsive layout.
 - Connection settings for host, port, user, password, database, and client path.
 - Demo mode for first-run exploration and UI review.
+- Real database mode: the object tree and query results stay unavailable until `SELECT 1` succeeds against the configured MySQL server.
+- Design tools for ER preview, import/export SQL generation, database comparison queries, and safe mock `INSERT` generation.
 
 ## Packaging
 
