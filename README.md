@@ -1,8 +1,6 @@
 # MySQL Studio
 
-简体中文 | [English](README.en.md)
-
-> 中文说明见 [README.zh-CN.md](README.zh-CN.md)。
+[简体中文](README.zh-CN.md) | [English](README.en.md)
 
 MySQL Studio is a modern desktop client shell for MySQL. It provides a clean SQL editor, object browser, query history, result table, Explain view, CSV export, light/dark theme, and an optional local bridge that executes the real `mysql.exe` client.
 
