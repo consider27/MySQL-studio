@@ -61,7 +61,18 @@ function runMysql({ mysqlPath, host, port, user, password, database, sql, extraA
 ipcMain.handle('mysql:run', (_event, payload) => runMysql(payload));
 ipcMain.handle('mysql:start-service', async () => {
   const serviceNames = ['MySQL80', 'MySQL', 'MariaDB', 'MySQL90'];
-  for (const serviceName of serviceNames) {
+  try {
+    const listed = await new Promise((resolve) => {
+      const child = spawn('sc.exe', ['query', 'state=', 'all'], { windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
+      let output = '';
+      child.stdout.on('data', (chunk) => { output += chunk.toString(); });
+      child.on('error', () => resolve(''));
+      child.on('close', () => resolve(output));
+    });
+    const discovered = [...String(listed).matchAll(/SERVICE_NAME:\s*([^\r\n]+)/gi)].map((match) => match[1].trim()).filter((name) => /mysql|maria/i.test(name));
+    serviceNames.unshift(...discovered);
+  } catch (_) {}
+  for (const serviceName of [...new Set(serviceNames)]) {
     const result = await new Promise((resolve) => {
       const child = spawn('sc.exe', ['start', serviceName], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
       let output = '';
@@ -72,7 +83,7 @@ ipcMain.handle('mysql:start-service', async () => {
     });
     if (result.ok) return { ok: true, serviceName, output: result.output };
   }
-  return { ok: false, error: '未找到可启动的 MySQL Windows 服务，或当前用户没有启动服务的权限。请先安装 MySQL Server。' };
+  return { ok: false, error: '未找到可启动的 MySQL Windows 服务，或当前用户没有启动服务的权限。当前可能只安装了 mysql.exe 客户端，请先安装 MySQL Server。' };
 });
 ipcMain.handle('mysql:find-executable', () => {
   const candidates = [];

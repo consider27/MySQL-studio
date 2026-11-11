@@ -1,6 +1,6 @@
 {
   "name": "mysql-studio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "A polished desktop MySQL client with a mysql.exe bridge.",
   "main": "main.js",
