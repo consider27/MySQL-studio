@@ -73,6 +73,14 @@ ipcMain.handle('mysql:start-service', async () => {
     serviceNames.unshift(...discovered);
   } catch (_) {}
   for (const serviceName of [...new Set(serviceNames)]) {
+    const status = await new Promise((resolve) => {
+      const child = spawn('sc.exe', ['query', serviceName], { windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
+      let output = '';
+      child.stdout.on('data', (chunk) => { output += chunk.toString(); });
+      child.on('error', () => resolve(''));
+      child.on('close', () => resolve(output));
+    });
+    if (/STATE\s*:\s*4\s+RUNNING/i.test(status)) return { ok: true, serviceName, alreadyRunning: true, output: status };
     const result = await new Promise((resolve) => {
       const child = spawn('sc.exe', ['start', serviceName], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
       let output = '';
