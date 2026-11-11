@@ -5,9 +5,11 @@ MySQL Studio is a modern desktop client shell for MySQL. It provides a clean SQL
 ## Run
 
 ```powershell
-npm install
-npm start
+npm install        # install Electron dependencies, once
+npm start          # launch the desktop app for local development
 ```
+
+The commands have separate purposes: `npm start` runs the app; `npm run dist` packages a Windows build into `dist/`. They do not execute SQL themselves. SQL is sent to `mysql.exe` after a connection is configured in the app.
 
 Open the gear icon, set the path to `mysql.exe`, and save the connection. If the path is empty, the interface runs in demo mode with sample order data so the UI can be explored without a database.
 
