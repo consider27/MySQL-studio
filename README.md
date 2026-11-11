@@ -11,6 +11,14 @@ npm start
 
 Open the gear icon, set the path to `mysql.exe`, and save the connection. If the path is empty, the interface runs in demo mode with sample order data so the UI can be explored without a database.
 
+## Upload to GitHub
+
+The local repository is already configured with `origin` pointing to `https://github.com/consider27/mysql-studio.git`. Create that empty repository under the `consider27` account (or authenticate GitHub CLI), then run:
+
+```powershell
+git push -u origin main
+```
+
 The bridge starts the client with `--batch --raw --column-names`, writes SQL to stdin, and parses tab-separated stdout into the result table. The password is supplied through `MYSQL_PWD` for that process and is not written into the SQL text. For production use, add OS keychain storage and a dedicated query allow-list before distributing the app to other users.
 
 ## Features in this prototype
