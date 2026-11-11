@@ -2,18 +2,23 @@
 
 [简体中文](README.zh-CN.md) | [English](README.en.md)
 
-MySQL Studio is a modern desktop client shell for MySQL. It provides a clean SQL editor, object browser, query history, result table, Explain view, CSV export, light/dark theme, and an optional local bridge that executes the real `mysql.exe` client.
+MySQL Studio 0.2.0 is a modern Windows desktop client that executes SQL through the local `mysql.exe` client and renders real MySQL metadata and results.
 
 ## Run
 
 ```powershell
-npm install        # install Electron dependencies, once
-npm start          # launch the desktop app for local development
+npm install
 ```
 
-The commands have separate purposes: `npm start` runs the app; `npm run dist` packages a Windows build into `dist/`. They do not execute SQL themselves. SQL is sent to `mysql.exe` after a connection is configured in the app.
+Then start the app with:
 
-Open the gear icon, set the path to `mysql.exe`, and save the connection. If the path is empty, the interface runs in demo mode with sample order data so the UI can be explored without a database.
+```powershell
+npm run app
+```
+
+`npm run app` launches the desktop client. It does not execute SQL by itself. Use `npm run build:win` to create Windows installers in `dist/`. `npm start` and `npm run dist` remain compatibility aliases.
+
+Open the connection finder, select `mysql.exe`, enter the server credentials, and save/test the connection. The object tree and query execution are enabled only after `SELECT 1` succeeds.
 
 ## Upload to GitHub
 

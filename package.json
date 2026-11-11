@@ -1,12 +1,14 @@
 {
   "name": "mysql-studio",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "description": "A polished desktop MySQL client with a mysql.exe bridge.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win portable"
+    "app": "electron .",
+    "build:win": "electron-builder --win",
+    "dist": "electron-builder --win"
   },
   "devDependencies": {
     "electron": "^31.0.0",
