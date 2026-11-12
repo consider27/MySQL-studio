@@ -24,7 +24,7 @@ npm run app
 
 ## 使用 EXE
 
-推荐下载 Release 中的 `MySQL-Studio-0.2.0-Setup.exe`。安装时可以选择是否创建桌面快捷方式；升级同一产品时安装程序会替换旧版本。也可以下载 `MySQL-Studio-0.2.0-win-x64.zip`，完整解压后运行 `MySQL Studio.exe`。
+推荐下载 Release 中的 `MySQL-Studio-0.3.0-Setup.exe`。安装时可以选择是否创建桌面快捷方式；升级同一产品时安装程序会替换旧版本。也可以下载 `MySQL-Studio-0.3.0-win-x64.zip`，完整解压后运行 `MySQL Studio.exe`。
 
 首次启动会打开“查找 MySQL”页面，自动搜索 PATH、MySQL Server、MariaDB、XAMPP 和 WAMP 中的 `mysql.exe`，也支持手动选择。然后在连接设置中填写主机、端口、用户名、密码和默认数据库，点击“保存并测试”。只有 `SELECT 1` 成功后，真实数据库对象和 SQL 执行才会启用。
 
@@ -51,6 +51,8 @@ Windows 安装程序会询问是否创建桌面快捷方式。首次启动时会
 - 侧边栏数据库对象：Tables、Views、Procedures。
 - ER 图预览、导入/导出 SQL 生成、数据库比较查询、模拟 `INSERT` 生成。
 - 深色/浅色主题和 `中 / EN` 点击切换。
+- SQL 代码联想：候选项带中文/英文解释，支持上下键、Enter、Tab 和 `Ctrl + Space`。
+- 窗口隐藏默认 Electron 网页菜单栏，只保留 MySQL Studio 工作区。
 
 ## 重要说明
 

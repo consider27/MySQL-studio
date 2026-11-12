@@ -2,7 +2,7 @@
 
 English | [简体中文](README.zh-CN.md)
 
-MySQL Studio is a modern Windows MySQL desktop client with a SQL editor, database object browser, query history, Explain, formatted result tables, CSV export, and a clickable Chinese/English UI switcher.
+MySQL Studio 0.3.0 is a modern Windows MySQL desktop client with a SQL editor, database object browser, query history, Explain, formatted result tables, CSV export, and a clickable Chinese/English UI switcher.
 
 ## Run from source
 
@@ -32,4 +32,4 @@ npm run dist       # create Windows build artifacts in dist/
 
 The password is passed to `mysql.exe` through the process environment and is not written into SQL text. Without a configured client path, the app uses demo data.
 
-The Windows setup asks whether to create a desktop shortcut. On first launch it searches PATH, MySQL Server, MariaDB, XAMPP, and WAMP folders for `mysql.exe` and fills the client path automatically.
+The Windows setup asks whether to create a desktop shortcut. On first launch it searches PATH, MySQL Server, MariaDB, XAMPP, and WAMP folders for `mysql.exe` and fills the client path automatically. The editor provides keyword and function completion with Chinese/English explanations, and the default Electron web menu bar is hidden.
