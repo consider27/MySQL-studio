@@ -22,6 +22,8 @@ function createWindow() {
 }
 
 function splitMysqlArgs(value) {
+  if (Array.isArray(value)) return value.map((item) => String(item)).filter(Boolean);
+  if (typeof value !== 'string') return [];
   return value.match(/(?:[^\s"]+|"[^"]*")+/g)?.map((item) => item.replace(/^"|"$/g, '')) || [];
 }
 
